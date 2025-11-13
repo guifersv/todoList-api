@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-
-using ToDoList.Domain;
-using ToDoList.Services.Interfaces;
+using ToDoList.Domain.Entities;
+using ToDoList.Domain.Interfaces;
 
 namespace ToDoList.Infrastructure;
 
@@ -18,15 +17,15 @@ public class TodoRepository(TodoDbContext context) : ITodoRepository
 
     public async Task<IEnumerable<TodoListModel>> GetAllTodoListsAsync()
     {
-        var models = await _context.TodoLists.Include(
-            t => t.Todos).ToListAsync();
+        var models = await _context.TodoLists.Include(t => t.Todos).ToListAsync();
         return models;
     }
 
     public async Task<TodoListModel?> GetTodoListByIdAsync(int todoListId)
     {
-        var model = await _context.TodoLists.Include(
-            t => t.Todos).FirstOrDefaultAsync(m => m.Id == todoListId);
+        var model = await _context
+            .TodoLists.Include(t => t.Todos)
+            .FirstOrDefaultAsync(m => m.Id == todoListId);
         return model;
     }
 

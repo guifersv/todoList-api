@@ -1,4 +1,5 @@
-using ToDoList.Domain;
+using ToDoList.Application.Dtos;
+using ToDoList.Domain.Entities;
 
 namespace ToDoList.Utilities;
 
@@ -11,14 +12,16 @@ public static class Utils
             Id = todoListModel.Id,
             Title = todoListModel.Title,
             Description = todoListModel.Description,
-            Todos = todoListModel.Todos.Select(t => new TodoDto()
-            {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                DateCreated = t.DateCreated,
-                IsCompleted = t.IsCompleted,
-            }).ToList()
+            Todos = todoListModel
+                .Todos.Select(t => new TodoDto()
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    DateCreated = t.DateCreated,
+                    IsCompleted = t.IsCompleted,
+                })
+                .ToList(),
         };
         return todoListDto;
     }

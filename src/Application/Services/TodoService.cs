@@ -1,8 +1,10 @@
-using ToDoList.Domain;
-using ToDoList.Services.Interfaces;
+using ToDoList.Application.Dtos;
+using ToDoList.Application.Services.Interfaces;
+using ToDoList.Domain.Entities;
+using ToDoList.Domain.Interfaces;
 using ToDoList.Utilities;
 
-namespace ToDoList.Services;
+namespace ToDoList.Application.Services;
 
 public class TodoService(ITodoRepository repository, ILogger<TodoService> logger) : ITodoService
 {
@@ -27,8 +29,7 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
         _logger.LogInformation("TodoService: Retrieving all todo lists");
         var todoListModels = await _repository.GetAllTodoListsAsync();
 
-        var todoListDtos = todoListModels
-          .Select(Utils.TodoList2Dto).ToList();
+        var todoListDtos = todoListModels.Select(Utils.TodoList2Dto).ToList();
         return todoListDtos;
     }
 
@@ -43,7 +44,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
         }
         else
         {
-            _logger.LogWarning("TodoService: TodoListModel with id {id} does not exist in database", todoListId);
+            _logger.LogWarning(
+                "TodoService: TodoListModel with id {id} does not exist in database",
+                todoListId
+            );
             return null;
         }
     }
@@ -63,7 +67,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
         }
         else
         {
-            _logger.LogWarning("TodoService: TodoListModel with id {id} does not exist in database", todoListId);
+            _logger.LogWarning(
+                "TodoService: TodoListModel with id {id} does not exist in database",
+                todoListId
+            );
             return null;
         }
     }
@@ -81,7 +88,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
         }
         else
         {
-            _logger.LogWarning("TodoService: TodoListModel with id {id} does not exist in database", todoListId);
+            _logger.LogWarning(
+                "TodoService: TodoListModel with id {id} does not exist in database",
+                todoListId
+            );
             return null;
         }
     }
@@ -107,7 +117,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
             return todoDto;
         }
         else
-            _logger.LogWarning("TodoService: TodoListModel with id {id} does not exist in database", todoListId);
+            _logger.LogWarning(
+                "TodoService: TodoListModel with id {id} does not exist in database",
+                todoListId
+            );
         return null;
     }
 
@@ -122,7 +135,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
             return Utils.Todo2Dto(model);
         }
         else
-            _logger.LogWarning("TodoService: TodoModel with id {id} does not exist in database", todoId);
+            _logger.LogWarning(
+                "TodoService: TodoModel with id {id} does not exist in database",
+                todoId
+            );
         return null;
     }
 
@@ -138,7 +154,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
             return Utils.Todo2Dto(model);
         }
         else
-            _logger.LogWarning("TodoService: TodoModel with id {id} does not exist in database", todoId);
+            _logger.LogWarning(
+                "TodoService: TodoModel with id {id} does not exist in database",
+                todoId
+            );
         return null;
     }
 }

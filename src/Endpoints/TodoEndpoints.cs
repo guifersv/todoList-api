@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-
-using ToDoList.Domain;
-using ToDoList.Services.Interfaces;
+using ToDoList.Application.Dtos;
+using ToDoList.Application.Services.Interfaces;
 
 namespace ToDoList.Endpoints;
 
@@ -17,35 +16,36 @@ public static class TodoEndpoints
     }
 
     [EndpointSummary("Create Todo")]
-    public static async Task<Results<Created, NotFound>> CreateTodo(int todoListId, TodoDto todoDto, ITodoService service)
+    public static async Task<Results<Created, NotFound>> CreateTodo(
+        int todoListId,
+        TodoDto todoDto,
+        ITodoService service
+    )
     {
         var createdModel = await service.CreateTodoAsync(todoListId, todoDto);
 
-        if (createdModel is not null)
-            return TypedResults.Created();
-        else
-            return TypedResults.NotFound();
+        return createdModel is not null ? TypedResults.Created() : TypedResults.NotFound();
     }
 
     [EndpointSummary("Delete Todo")]
-    public static async Task<Results<NoContent, NotFound>> DeleteTodo(int todoId, ITodoService service)
+    public static async Task<Results<NoContent, NotFound>> DeleteTodo(
+        int todoId,
+        ITodoService service
+    )
     {
         var deletedModel = await service.DeleteTodoAsync(todoId);
 
-        if (deletedModel is not null)
-            return TypedResults.NoContent();
-        else
-            return TypedResults.NotFound();
+        return deletedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 
     [EndpointSummary("Change Todo IsComplete property")]
-    public static async Task<Results<NoContent, NotFound>> ChangeTodoIsComplete(int todoId, ITodoService service)
+    public static async Task<Results<NoContent, NotFound>> ChangeTodoIsComplete(
+        int todoId,
+        ITodoService service
+    )
     {
         var changedModel = await service.ChangeTodoIsCompleteAsync(todoId);
 
-        if (changedModel is not null)
-            return TypedResults.NoContent();
-        else
-            return TypedResults.NotFound();
+        return changedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 }

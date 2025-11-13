@@ -1,6 +1,6 @@
-using ToDoList.Domain;
+using ToDoList.Domain.Entities;
 
-namespace ToDoList.Services.Interfaces;
+namespace ToDoList.Domain.Interfaces;
 
 public interface ITodoRepository
 {

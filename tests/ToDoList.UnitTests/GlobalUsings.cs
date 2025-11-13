@@ -1,9 +1,9 @@
 global using Microsoft.Extensions.Logging;
-
 global using Moq;
-
-global using ToDoList.Domain;
+global using ToDoList.Application.Dtos;
+global using ToDoList.Application.Services;
+global using ToDoList.Application.Services.Interfaces;
+global using ToDoList.Domain.Entities;
+global using ToDoList.Domain.Interfaces;
 global using ToDoList.Endpoints;
-global using ToDoList.Services;
-global using ToDoList.Services.Interfaces;
 global using ToDoList.Utilities;

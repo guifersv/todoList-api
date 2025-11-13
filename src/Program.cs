@@ -1,16 +1,13 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
 using Serilog;
-
+using ToDoList.Application.Services;
+using ToDoList.Application.Services.Interfaces;
+using ToDoList.Domain.Interfaces;
 using ToDoList.Endpoints;
 using ToDoList.Infrastructure;
-using ToDoList.Services;
-using ToDoList.Services.Interfaces;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 
 try
 {
@@ -20,20 +17,25 @@ try
     builder.Services.AddScoped<ITodoService, TodoService>();
     builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
-    builder.Services.AddSerilog((services, ls) => ls
-        .ReadFrom.Configuration(builder.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .WriteTo.Console());
+    builder.Services.AddSerilog(
+        (services, ls) =>
+            ls
+                .ReadFrom.Configuration(builder.Configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+    );
 
     SqlConnectionStringBuilder sqlConnectionStringBuilder = new(
-        builder.Configuration.GetConnectionString("TodoDbContext"))
+        builder.Configuration.GetConnectionString("TodoDbContext")
+    )
     {
-        Password = builder.Configuration["TodoContext:Password"]
+        Password = builder.Configuration["TodoContext:Password"],
     };
 
     builder.Services.AddDbContext<TodoDbContext>(options =>
-        options.UseSqlServer(sqlConnectionStringBuilder.ConnectionString));
+        options.UseSqlServer(sqlConnectionStringBuilder.ConnectionString)
+    );
 
     builder.Services.AddOpenApi();
     builder.Services.AddProblemDetails();

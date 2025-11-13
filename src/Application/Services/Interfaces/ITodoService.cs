@@ -1,6 +1,6 @@
-using ToDoList.Domain;
+using ToDoList.Application.Dtos;
 
-namespace ToDoList.Services.Interfaces;
+namespace ToDoList.Application.Services.Interfaces;
 
 public interface ITodoService
 {
