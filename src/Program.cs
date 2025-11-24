@@ -1,6 +1,9 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+
 using Serilog;
+
 using ToDoList.Application.Services;
 using ToDoList.Application.Services.Interfaces;
 using ToDoList.Domain.Interfaces;
@@ -39,6 +42,9 @@ try
 
     builder.Services.AddOpenApi();
     builder.Services.AddProblemDetails();
+    builder.Services.AddSwaggerGen(options =>
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoList Api", Version = "v1" })
+    );
 
     var app = builder.Build();
 
@@ -46,7 +52,8 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
-        app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+        app.UseSwagger();
+        app.UseSwaggerUI(options => options.SwaggerEndpoint("v1/swagger.json", "ToDoList Api v1"));
         app.UseDeveloperExceptionPage();
     }
     else
