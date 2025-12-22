@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.Interfaces;
 
@@ -18,16 +17,20 @@ public class TodoRepository(TodoDbContext context) : ITodoRepository
 
     public async Task<IEnumerable<TodoListModel>> GetAllTodoListsAsync()
     {
-        var models = await _context.TodoLists.Include(t => t.Todos).ToListAsync();
-        return models;
+        return await _context.TodoLists.Include(t => t.Todos).ToListAsync();
     }
 
     public async Task<TodoListModel?> GetTodoListByIdAsync(int todoListId)
     {
-        var model = await _context
+        return await _context
             .TodoLists.Include(t => t.Todos)
+            .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == todoListId);
-        return model;
+    }
+
+    public async Task<TodoListModel?> FindTodoListByIdAsync(int todoListId)
+    {
+        return await _context.TodoLists.FindAsync(todoListId);
     }
 
     public async Task UpdateTodoListAsync(TodoListModel todoListModel)
@@ -43,6 +46,11 @@ public class TodoRepository(TodoDbContext context) : ITodoRepository
     }
 
     public async Task<TodoModel?> GetTodoByIdAsync(int todoId)
+    {
+        return await _context.Todos.AsNoTracking().FirstOrDefaultAsync(w => w.Id == todoId);
+    }
+
+    public async Task<TodoModel?> FindTodoByIdAsync(int todoId)
     {
         return await _context.Todos.FindAsync(todoId);
     }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-
 using ToDoList.Application.Dtos;
 using ToDoList.Application.Services.Interfaces;
 
@@ -36,15 +35,16 @@ public static class TodoListEndpoints
     }
 
     [EndpointSummary("Create TodoList")]
-    public static async Task<CreatedAtRoute> CreateTodoList(
+    public static async Task<CreatedAtRoute<TodoListDto>> CreateTodoList(
         TodoListDto todoListDto,
         ITodoService service
     )
     {
         var createdModel = await service.CreateTodoListAsync(todoListDto);
         return TypedResults.CreatedAtRoute(
+            createdModel.Item2,
             nameof(GetTodoList),
-            new { todoListId = createdModel.Id }
+            new { todoListId = createdModel.Item1 }
         );
     }
 
@@ -57,7 +57,7 @@ public static class TodoListEndpoints
     {
         var updatedModel = await service.UpdateTodoListAsync(todoListId, todoListDto);
 
-        return updatedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
+        return updatedModel ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 
     [EndpointSummary("Delete TodoList")]
@@ -68,6 +68,6 @@ public static class TodoListEndpoints
     {
         var deletedModel = await service.DeleteTodoListAsync(todoListId);
 
-        return deletedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
+        return deletedModel ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 }

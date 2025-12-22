@@ -11,9 +11,10 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
     private readonly ILogger<TodoService> _logger = logger;
     private readonly ITodoRepository _repository = repository;
 
-    public async Task<TodoListDto> CreateTodoListAsync(TodoListDto todoListDto)
+    public async Task<ValueTuple<int, TodoListDto>> CreateTodoListAsync(TodoListDto todoListDto)
     {
         _logger.LogInformation("TodoService: Creating the todo list");
+
         TodoListModel todoList = new()
         {
             Title = todoListDto.Title,
@@ -21,86 +22,70 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
         };
         var createdModel = await _repository.CreateTodoListAsync(todoList);
 
-        return Utils.TodoList2Dto(createdModel);
+        return new(createdModel.Id, Utils.TodoList2Dto(createdModel));
     }
 
     public async Task<IEnumerable<TodoListDto>> GetAllTodoListsAsync()
     {
         _logger.LogInformation("TodoService: Retrieving all todo lists");
+
         var todoListModels = await _repository.GetAllTodoListsAsync();
 
-        var todoListDtos = todoListModels.Select(Utils.TodoList2Dto).ToList();
-        return todoListDtos;
+        return todoListModels.Select(Utils.TodoList2Dto).ToList();
     }
 
     public async Task<TodoListDto?> GetTodoListByIdAsync(int todoListId)
     {
         _logger.LogInformation("TodoService: Retrieving todo list by id");
+
         var result = await _repository.GetTodoListByIdAsync(todoListId);
 
         if (result is not null)
-        {
             return Utils.TodoList2Dto(result);
-        }
-        else
-        {
-            _logger.LogWarning(
-                "TodoService: TodoListModel with id {id} does not exist in database",
-                todoListId
-            );
-            return null;
-        }
+
+        _logger.LogWarning("TodoService: TodoListModel does not exist in database");
+        return null;
     }
 
-    public async Task<TodoListDto?> UpdateTodoListAsync(int todoListId, TodoListDto todoListDto)
+    public async Task<bool> UpdateTodoListAsync(int todoListId, TodoListDto todoListDto)
     {
         _logger.LogInformation("TodoService: Updating todo list");
-        var model = await _repository.GetTodoListByIdAsync(todoListId);
+
+        var model = await _repository.FindTodoListByIdAsync(todoListId);
 
         if (model is not null)
         {
             model.Title = todoListDto.Title;
             model.Description = todoListDto.Description;
             await _repository.UpdateTodoListAsync(model);
+            return true;
+        }
 
-            return Utils.TodoList2Dto(model);
-        }
-        else
-        {
-            _logger.LogWarning(
-                "TodoService: TodoListModel with id {id} does not exist in database",
-                todoListId
-            );
-            return null;
-        }
+        _logger.LogWarning("TodoService: TodoListModel does not exist in database");
+        return false;
     }
 
-    public async Task<TodoListDto?> DeleteTodoListAsync(int todoListId)
+    public async Task<bool> DeleteTodoListAsync(int todoListId)
     {
         _logger.LogInformation("TodoService: Updating todo list");
 
-        var model = await _repository.GetTodoListByIdAsync(todoListId);
+        var model = await _repository.FindTodoListByIdAsync(todoListId);
 
         if (model is not null)
         {
             await _repository.DeleteTodoListAsync(model);
-            return Utils.TodoList2Dto(model);
+            return true;
         }
-        else
-        {
-            _logger.LogWarning(
-                "TodoService: TodoListModel with id {id} does not exist in database",
-                todoListId
-            );
-            return null;
-        }
+
+        _logger.LogWarning("TodoService: TodoListModel does not exist in database");
+        return false;
     }
 
-    public async Task<TodoDto?> CreateTodoAsync(int todoListId, TodoDto todoDto)
+    public async Task<bool> CreateTodoAsync(int todoListId, TodoDto todoDto)
     {
         _logger.LogInformation("TodoService: Creating todo");
 
-        var todoList = await _repository.GetTodoListByIdAsync(todoListId);
+        var todoList = await _repository.FindTodoListByIdAsync(todoListId);
 
         if (todoList is not null)
         {
@@ -114,50 +99,43 @@ public class TodoService(ITodoRepository repository, ILogger<TodoService> logger
             };
             todoList.Todos.Add(todoModel);
             await _repository.UpdateTodoListAsync(todoList);
-            return todoDto;
+            return true;
         }
-        else
-            _logger.LogWarning(
-                "TodoService: TodoListModel with id {id} does not exist in database",
-                todoListId
-            );
-        return null;
+
+        _logger.LogWarning("TodoService: TodoListModel does not exist in database");
+        return false;
     }
 
-    public async Task<TodoDto?> DeleteTodoAsync(int todoId)
+    public async Task<bool> DeleteTodoAsync(int todoId)
     {
         _logger.LogInformation("TodoService: Deleting todo");
 
-        var model = await _repository.GetTodoByIdAsync(todoId);
+        var model = await _repository.FindTodoByIdAsync(todoId);
+
         if (model is not null)
         {
             await _repository.DeleteTodoAsync(model);
-            return Utils.Todo2Dto(model);
+            return true;
         }
-        else
-            _logger.LogWarning(
-                "TodoService: TodoModel with id {id} does not exist in database",
-                todoId
-            );
-        return null;
+
+        _logger.LogWarning("TodoService: TodoModel does not exist in database");
+        return false;
     }
 
-    public async Task<TodoDto?> ChangeTodoIsCompleteAsync(int todoId)
+    public async Task<bool> ChangeTodoIsCompleteAsync(int todoId)
     {
         _logger.LogInformation("TodoService: Changing todo IsComplete property");
 
-        var model = await _repository.GetTodoByIdAsync(todoId);
+        var model = await _repository.FindTodoByIdAsync(todoId);
+
         if (model is not null)
         {
             model.IsCompleted = !model.IsCompleted;
             await _repository.UpdateTodoAsync(model);
-            return Utils.Todo2Dto(model);
+            return true;
         }
-        else
-            _logger.LogWarning(
-                "TodoService: TodoModel with id {id} does not exist in database",
-                todoId
-            );
-        return null;
+
+        _logger.LogWarning("TodoService: TodoModel does not exist in database");
+        return false;
     }
 }

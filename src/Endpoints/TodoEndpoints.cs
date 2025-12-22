@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-
 using ToDoList.Application.Dtos;
 using ToDoList.Application.Services.Interfaces;
 
@@ -25,7 +24,7 @@ public static class TodoEndpoints
     {
         var createdModel = await service.CreateTodoAsync(todoListId, todoDto);
 
-        return createdModel is not null ? TypedResults.Created() : TypedResults.NotFound();
+        return createdModel ? TypedResults.Created() : TypedResults.NotFound();
     }
 
     [EndpointSummary("Delete Todo")]
@@ -36,7 +35,7 @@ public static class TodoEndpoints
     {
         var deletedModel = await service.DeleteTodoAsync(todoId);
 
-        return deletedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
+        return deletedModel ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 
     [EndpointSummary("Change Todo IsComplete property")]
@@ -47,6 +46,6 @@ public static class TodoEndpoints
     {
         var changedModel = await service.ChangeTodoIsCompleteAsync(todoId);
 
-        return changedModel is not null ? TypedResults.NoContent() : TypedResults.NotFound();
+        return changedModel ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 }
