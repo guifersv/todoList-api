@@ -11,10 +11,13 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.CreateTodoListAsync(
-              It.Is<TodoListModel>(m => m.Title == todoListModel.Title)).Result)
-          .Returns(todoListModel)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.CreateTodoListAsync(
+                    It.Is<TodoListModel>(m => m.Title == todoListModel.Title)
+                ).Result
+            )
+            .Returns(todoListModel)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.CreateTodoListAsync(Utils.TodoList2Dto(todoListModel));
@@ -34,9 +37,9 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetAllTodoListsAsync().Result)
-          .Returns(models)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetAllTodoListsAsync().Result)
+            .Returns(models)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.GetAllTodoListsAsync();
@@ -56,9 +59,9 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetAllTodoListsAsync().Result)
-          .Returns(models)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetAllTodoListsAsync().Result)
+            .Returns(models)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.GetAllTodoListsAsync();
@@ -77,10 +80,9 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == todoListModel.Id)).Result)
-          .Returns(todoListModel)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.Is<int>(id => id == todoListModel.Id)).Result)
+            .Returns(todoListModel)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.GetTodoListByIdAsync(todoListModel.Id);
@@ -99,10 +101,9 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.IsAny<int>()).Result)
-          .Returns((TodoListModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.IsAny<int>()).Result)
+            .Returns((TodoListModel?)null)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.GetTodoListByIdAsync(1);
@@ -121,20 +122,25 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == updatedModel.Id)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.Is<int>(id => id == updatedModel.Id)).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == updatedModel.Id && s.Title == updatedModel.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.UpdateTodoListAsync(
+                    It.Is<TodoListModel>(s =>
+                        s.Id == updatedModel.Id && s.Title == updatedModel.Title
+                    )
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.UpdateTodoListAsync(
-            updatedModel.Id, Utils.TodoList2Dto(updatedModel));
+            updatedModel.Id,
+            Utils.TodoList2Dto(updatedModel)
+        );
 
         Assert.NotNull(returnedModel);
         Assert.IsType<TodoListDto>(returnedModel);
@@ -152,20 +158,25 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == updatedModel.Id)).Result)
-          .Returns((TodoListModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.Is<int>(id => id == updatedModel.Id)).Result)
+            .Returns((TodoListModel?)null)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == updatedModel.Id && s.Title == updatedModel.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Never());
+            .Setup(r =>
+                r.UpdateTodoListAsync(
+                    It.Is<TodoListModel>(s =>
+                        s.Id == updatedModel.Id && s.Title == updatedModel.Title
+                    )
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.UpdateTodoListAsync(
-            updatedModel.Id, Utils.TodoList2Dto(updatedModel));
+            updatedModel.Id,
+            Utils.TodoList2Dto(updatedModel)
+        );
 
         Assert.Null(returnedModel);
         repositoryMock.Verify();
@@ -180,16 +191,17 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == model.Id)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.Is<int>(id => id == model.Id)).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.DeleteTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == model.Id && s.Title == model.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.DeleteTodoListAsync(
+                    It.Is<TodoListModel>(s => s.Id == model.Id && s.Title == model.Title)
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.DeleteTodoListAsync(model.Id);
@@ -210,16 +222,17 @@ public class ServicesTests
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == model.Id)).Result)
-          .Returns((TodoListModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoListByIdAsync(It.Is<int>(id => id == model.Id)).Result)
+            .Returns((TodoListModel?)null)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.DeleteTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == model.Id && s.Title == model.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Never());
+            .Setup(r =>
+                r.DeleteTodoListAsync(
+                    It.Is<TodoListModel>(s => s.Id == model.Id && s.Title == model.Title)
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.DeleteTodoListAsync(model.Id);
@@ -237,23 +250,26 @@ public class ServicesTests
             Id = 1,
             Title = "str",
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
 
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == todoModel.TodoListModelId)).Result)
-          .Returns(todoList)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.GetTodoListByIdAsync(It.Is<int>(id => id == todoModel.TodoListModelId)).Result
+            )
+            .Returns(todoList)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == todoList.Id && s.Title == todoList.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.UpdateTodoListAsync(
+                    It.Is<TodoListModel>(s => s.Id == todoList.Id && s.Title == todoList.Title)
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.CreateTodoAsync(todoList.Id, Utils.Todo2Dto(todoModel));
@@ -274,23 +290,26 @@ public class ServicesTests
             Id = 1,
             Title = "string",
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
 
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoListByIdAsync(
-                It.Is<int>(id => id == todoModel.TodoListModelId)).Result)
-          .Returns((TodoListModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.GetTodoListByIdAsync(It.Is<int>(id => id == todoModel.TodoListModelId)).Result
+            )
+            .Returns((TodoListModel?)null)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoListAsync(
-                It.Is<TodoListModel>(
-                  s => s.Id == todoList.Id && s.Title == todoList.Title)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Never());
+            .Setup(r =>
+                r.UpdateTodoListAsync(
+                    It.Is<TodoListModel>(s => s.Id == todoList.Id && s.Title == todoList.Title)
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.CreateTodoAsync(todoList.Id, Utils.Todo2Dto(todoModel));
@@ -308,24 +327,29 @@ public class ServicesTests
             Id = 1,
             Title = "string",
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
 
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoByIdAsync(
-                It.Is<int>(id => id == todoModel.Id)).Result)
-          .Returns(todoModel)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoByIdAsync(It.Is<int>(id => id == todoModel.Id)).Result)
+            .Returns(todoModel)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.DeleteTodoAsync(
-                It.Is<TodoModel>(
-                  s => s.Id == todoModel.Id && s.Title == todoModel.Title &&
-                  s.TodoListModelId == todoModel.TodoListModelId && s.TodoListModelNavigation == todoModel.TodoListModelNavigation)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Once());
+            .Setup(r =>
+                r.DeleteTodoAsync(
+                    It.Is<TodoModel>(s =>
+                        s.Id == todoModel.Id
+                        && s.Title == todoModel.Title
+                        && s.TodoListModelId == todoModel.TodoListModelId
+                        && s.TodoListModelNavigation == todoModel.TodoListModelNavigation
+                    )
+                )
+            )
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.DeleteTodoAsync(todoModel.Id);
@@ -346,22 +370,20 @@ public class ServicesTests
             Id = 1,
             Title = "string",
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
 
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoByIdAsync(
-                It.Is<int>(id => id == todoModel.Id)).Result)
-          .Returns((TodoModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoByIdAsync(It.Is<int>(id => id == todoModel.Id)).Result)
+            .Returns((TodoModel?)null)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.DeleteTodoAsync(
-                It.Is<TodoModel>(s => s.Id == todoModel.Id)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Never());
+            .Setup(r => r.DeleteTodoAsync(It.Is<TodoModel>(s => s.Id == todoModel.Id)))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.DeleteTodoAsync(todoModel.Id);
@@ -380,21 +402,20 @@ public class ServicesTests
             Title = "string",
             IsCompleted = true,
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
 
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoByIdAsync(
-                It.Is<int>(id => id == todoModel.Id)).Result)
-          .Returns(todoModel)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoByIdAsync(It.Is<int>(id => id == todoModel.Id)).Result)
+            .Returns(todoModel)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoAsync(It.Is<TodoModel>(w => w == todoModel)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Once());
+            .Setup(r => r.UpdateTodoAsync(It.Is<TodoModel>(w => w == todoModel)))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.ChangeTodoIsCompleteAsync(todoModel.Id);
@@ -415,20 +436,19 @@ public class ServicesTests
             Title = "string",
             IsCompleted = true,
             TodoListModelId = todoList.Id,
-            TodoListModelNavigation = todoList
+            TodoListModelNavigation = todoList,
         };
         var logger = Mock.Of<ILogger<TodoService>>();
 
         var repositoryMock = new Mock<ITodoRepository>();
         repositoryMock
-          .Setup(r => r.GetTodoByIdAsync(
-                It.IsAny<int>()).Result)
-          .Returns((TodoModel?)null)
-          .Verifiable(Times.Once());
+            .Setup(r => r.GetTodoByIdAsync(It.IsAny<int>()).Result)
+            .Returns((TodoModel?)null)
+            .Verifiable(Times.Once());
         repositoryMock
-          .Setup(r => r.UpdateTodoAsync(It.Is<TodoModel>(w => w == todoModel)))
-          .Returns(Task.CompletedTask)
-          .Verifiable(Times.Never());
+            .Setup(r => r.UpdateTodoAsync(It.Is<TodoModel>(w => w == todoModel)))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
 
         var service = new TodoService(repositoryMock.Object, logger);
         var returnedModel = await service.ChangeTodoIsCompleteAsync(todoModel.Id);

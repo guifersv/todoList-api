@@ -1,9 +1,6 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-
 using Serilog;
-
 using ToDoList.Application.Services;
 using ToDoList.Application.Services.Interfaces;
 using ToDoList.Domain.Interfaces;
@@ -29,15 +26,8 @@ try
                 .WriteTo.Console()
     );
 
-    SqlConnectionStringBuilder sqlConnectionStringBuilder = new(
-        builder.Configuration.GetConnectionString("TodoDbContext")
-    )
-    {
-        Password = builder.Configuration["TodoContext:Password"],
-    };
-
     builder.Services.AddDbContext<TodoDbContext>(options =>
-        options.UseSqlServer(sqlConnectionStringBuilder.ConnectionString)
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
 
     builder.Services.AddOpenApi();

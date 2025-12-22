@@ -11,9 +11,9 @@ public class EndpointsTests
         List<TodoListDto> models = [model];
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.GetAllTodoListsAsync().Result)
-          .Returns(models)
-          .Verifiable(Times.Once());
+            .Setup(s => s.GetAllTodoListsAsync().Result)
+            .Returns(models)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.GetAllTodoLists(serviceMock.Object);
 
@@ -28,9 +28,9 @@ public class EndpointsTests
         TodoListDto model = new() { Id = 1, Title = "string" };
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.GetTodoListByIdAsync(It.Is<int>(id => id == model.Id)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s => s.GetTodoListByIdAsync(It.Is<int>(id => id == model.Id)).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.GetTodoList(model.Id, serviceMock.Object);
 
@@ -44,9 +44,9 @@ public class EndpointsTests
     {
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.GetTodoListByIdAsync(It.IsAny<int>()).Result)
-          .Returns((TodoListDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s => s.GetTodoListByIdAsync(It.IsAny<int>()).Result)
+            .Returns((TodoListDto?)null)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.GetTodoList(1, serviceMock.Object);
 
@@ -61,10 +61,13 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.CreateTodoListAsync(
-                It.Is<TodoListDto>(d => d.Id == model.Id && d.Title == model.Title)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s =>
+                s.CreateTodoListAsync(
+                    It.Is<TodoListDto>(d => d.Id == model.Id && d.Title == model.Title)
+                ).Result
+            )
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.CreateTodoList(model, serviceMock.Object);
         var returnedModel = Assert.IsType<CreatedAtRoute>(result);
@@ -82,13 +85,22 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.UpdateTodoListAsync(
-                It.Is<int>(id => id == updatedModel.Id),
-                It.Is<TodoListDto>(m => m.Id == updatedModel.Id && m.Title == updatedModel.Title)).Result)
-          .Returns(updatedModel)
-          .Verifiable(Times.Once());
+            .Setup(s =>
+                s.UpdateTodoListAsync(
+                    It.Is<int>(id => id == updatedModel.Id),
+                    It.Is<TodoListDto>(m =>
+                        m.Id == updatedModel.Id && m.Title == updatedModel.Title
+                    )
+                ).Result
+            )
+            .Returns(updatedModel)
+            .Verifiable(Times.Once());
 
-        var result = await TodoListEndpoints.UpdateTodoList(updatedModel.Id, updatedModel, serviceMock.Object);
+        var result = await TodoListEndpoints.UpdateTodoList(
+            updatedModel.Id,
+            updatedModel,
+            serviceMock.Object
+        );
 
         Assert.IsType<NoContent>(result.Result);
         serviceMock.Verify();
@@ -101,13 +113,22 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.UpdateTodoListAsync(
-                It.Is<int>(id => id == updatedModel.Id),
-                It.Is<TodoListDto>(m => m.Id == updatedModel.Id && m.Title == updatedModel.Title)).Result)
-          .Returns((TodoListDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s =>
+                s.UpdateTodoListAsync(
+                    It.Is<int>(id => id == updatedModel.Id),
+                    It.Is<TodoListDto>(m =>
+                        m.Id == updatedModel.Id && m.Title == updatedModel.Title
+                    )
+                ).Result
+            )
+            .Returns((TodoListDto?)null)
+            .Verifiable(Times.Once());
 
-        var result = await TodoListEndpoints.UpdateTodoList(updatedModel.Id, updatedModel, serviceMock.Object);
+        var result = await TodoListEndpoints.UpdateTodoList(
+            updatedModel.Id,
+            updatedModel,
+            serviceMock.Object
+        );
 
         Assert.IsType<NotFound>(result.Result);
         serviceMock.Verify();
@@ -120,9 +141,9 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.DeleteTodoListAsync(It.Is<int>(id => id == model.Id)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s => s.DeleteTodoListAsync(It.Is<int>(id => id == model.Id)).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.DeleteTodoList(model.Id, serviceMock.Object);
 
@@ -137,9 +158,9 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.DeleteTodoListAsync(It.Is<int>(id => id == model.Id)).Result)
-          .Returns((TodoListDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s => s.DeleteTodoListAsync(It.Is<int>(id => id == model.Id)).Result)
+            .Returns((TodoListDto?)null)
+            .Verifiable(Times.Once());
 
         var result = await TodoListEndpoints.DeleteTodoList(model.Id, serviceMock.Object);
 
@@ -153,9 +174,14 @@ public class EndpointsTests
         TodoDto model = new() { Title = "string" };
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.CreateTodoAsync(It.IsAny<int>(), It.Is<TodoDto>(m => m.Title == model.Title)).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s =>
+                s.CreateTodoAsync(
+                    It.IsAny<int>(),
+                    It.Is<TodoDto>(m => m.Title == model.Title)
+                ).Result
+            )
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.CreateTodo(1, model, serviceMock.Object);
 
@@ -169,9 +195,14 @@ public class EndpointsTests
         TodoDto model = new() { Title = "string" };
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.CreateTodoAsync(It.IsAny<int>(), It.Is<TodoDto>(m => m.Title == model.Title)).Result)
-          .Returns((TodoDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s =>
+                s.CreateTodoAsync(
+                    It.IsAny<int>(),
+                    It.Is<TodoDto>(m => m.Title == model.Title)
+                ).Result
+            )
+            .Returns((TodoDto?)null)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.CreateTodo(1, model, serviceMock.Object);
 
@@ -186,9 +217,9 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.DeleteTodoAsync(It.IsAny<int>()).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s => s.DeleteTodoAsync(It.IsAny<int>()).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.DeleteTodo(1, serviceMock.Object);
 
@@ -201,9 +232,9 @@ public class EndpointsTests
     {
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.DeleteTodoAsync(It.IsAny<int>()).Result)
-          .Returns((TodoDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s => s.DeleteTodoAsync(It.IsAny<int>()).Result)
+            .Returns((TodoDto?)null)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.DeleteTodo(1, serviceMock.Object);
 
@@ -218,9 +249,9 @@ public class EndpointsTests
 
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.ChangeTodoIsCompleteAsync(It.IsAny<int>()).Result)
-          .Returns(model)
-          .Verifiable(Times.Once());
+            .Setup(s => s.ChangeTodoIsCompleteAsync(It.IsAny<int>()).Result)
+            .Returns(model)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.ChangeTodoIsComplete(1, serviceMock.Object);
 
@@ -233,9 +264,9 @@ public class EndpointsTests
     {
         var serviceMock = new Mock<ITodoService>();
         serviceMock
-          .Setup(s => s.ChangeTodoIsCompleteAsync(It.IsAny<int>()).Result)
-          .Returns((TodoDto?)null)
-          .Verifiable(Times.Once());
+            .Setup(s => s.ChangeTodoIsCompleteAsync(It.IsAny<int>()).Result)
+            .Returns((TodoDto?)null)
+            .Verifiable(Times.Once());
 
         var result = await TodoEndpoints.ChangeTodoIsComplete(1, serviceMock.Object);
 

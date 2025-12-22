@@ -2,76 +2,67 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoList.Infrastructure;
 
 #nullable disable
 
-namespace ToDoList.Migrations
+namespace ToDoList.src.Infrastructure.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    [Migration("20250922172717_FixValidation")]
-    partial class FixValidation
+    [Migration("20251222195223_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ToDoList.Domain.TodoListModel", b =>
+            modelBuilder.Entity("ToDoList.Domain.Entities.TodoListModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("TodoLists");
                 });
 
-            modelBuilder.Entity("ToDoList.Domain.TodoModel", b =>
+            modelBuilder.Entity("ToDoList.Domain.Entities.TodoModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TodoListModelId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -80,9 +71,9 @@ namespace ToDoList.Migrations
                     b.ToTable("Todos");
                 });
 
-            modelBuilder.Entity("ToDoList.Domain.TodoModel", b =>
+            modelBuilder.Entity("ToDoList.Domain.Entities.TodoModel", b =>
                 {
-                    b.HasOne("ToDoList.Domain.TodoListModel", "TodoListModelNavigation")
+                    b.HasOne("ToDoList.Domain.Entities.TodoListModel", "TodoListModelNavigation")
                         .WithMany("Todos")
                         .HasForeignKey("TodoListModelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -91,7 +82,7 @@ namespace ToDoList.Migrations
                     b.Navigation("TodoListModelNavigation");
                 });
 
-            modelBuilder.Entity("ToDoList.Domain.TodoListModel", b =>
+            modelBuilder.Entity("ToDoList.Domain.Entities.TodoListModel", b =>
                 {
                     b.Navigation("Todos");
                 });
