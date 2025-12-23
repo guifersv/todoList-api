@@ -8,6 +8,7 @@ public static class TodoEndpoints
 {
     public static RouteGroupBuilder RouteTodoEndpoint(this RouteGroupBuilder group)
     {
+        group.MapGet("/{todoId}", GetTodo).WithName(nameof(GetTodo));
         group.MapPost("/{todoListId}", CreateTodo);
         group.MapDelete("/{todoId}", DeleteTodo);
         group.MapPatch("/{todoId}", ChangeTodoIsComplete);
@@ -15,8 +16,19 @@ public static class TodoEndpoints
         return group;
     }
 
+    [EndpointSummary("Get Todo model")]
+    public static async Task<Results<Ok<TodoDto>, NotFound>> GetTodo(
+        int todoId,
+        ITodoService service
+    )
+    {
+        var returnedModel = await service.GetTodoByIdAsync(todoId);
+
+        return returnedModel is not null ? TypedResults.Ok(returnedModel) : TypedResults.NotFound();
+    }
+
     [EndpointSummary("Create Todo")]
-    public static async Task<Results<Created, NotFound>> CreateTodo(
+    public static async Task<Results<CreatedAtRoute<TodoDto>, NotFound>> CreateTodo(
         int todoListId,
         TodoDto todoDto,
         ITodoService service
@@ -24,7 +36,13 @@ public static class TodoEndpoints
     {
         var createdModel = await service.CreateTodoAsync(todoListId, todoDto);
 
-        return createdModel ? TypedResults.Created() : TypedResults.NotFound();
+        return createdModel is not null
+            ? TypedResults.CreatedAtRoute(
+                createdModel,
+                nameof(GetTodo),
+                new { todoId = createdModel.Id }
+            )
+            : TypedResults.NotFound();
     }
 
     [EndpointSummary("Delete Todo")]

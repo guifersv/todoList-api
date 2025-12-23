@@ -45,6 +45,14 @@ public class TodoRepository(TodoDbContext context) : ITodoRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<TodoModel> CreateTodoAsync(int todoListId, TodoModel todoModel)
+    {
+        var todoListModel = await FindTodoListByIdAsync(todoListId);
+        todoListModel!.Todos.Add(todoModel);
+        await _context.SaveChangesAsync();
+        return todoModel;
+    }
+
     public async Task<TodoModel?> GetTodoByIdAsync(int todoId)
     {
         return await _context.Todos.AsNoTracking().FirstOrDefaultAsync(w => w.Id == todoId);

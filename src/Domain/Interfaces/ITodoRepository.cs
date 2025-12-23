@@ -11,6 +11,7 @@ public interface ITodoRepository
     public Task UpdateTodoListAsync(TodoListModel todoListModel);
     public Task DeleteTodoListAsync(TodoListModel todoListModel);
 
+    public Task<TodoModel> CreateTodoAsync(int todoListId, TodoModel todoModel);
     public Task<TodoModel?> GetTodoByIdAsync(int todoId);
     public Task<TodoModel?> FindTodoByIdAsync(int todoId);
     public Task UpdateTodoAsync(TodoModel todoModel);

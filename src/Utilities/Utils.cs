@@ -7,13 +7,19 @@ public static class Utils
 {
     public static TodoListDto TodoList2Dto(TodoListModel todoListModel)
     {
-        return new() { Title = todoListModel.Title, Description = todoListModel.Description };
+        return new()
+        {
+            Id = todoListModel.Id,
+            Title = todoListModel.Title,
+            Description = todoListModel.Description,
+        };
     }
 
     public static TodoDto Todo2Dto(TodoModel todoModel)
     {
         return new()
         {
+            Id = todoModel.Id,
             Title = todoModel.Title,
             Description = todoModel.Description,
             DateCreated = todoModel.DateCreated,
