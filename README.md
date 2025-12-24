@@ -1,2 +1,3 @@
 # ToDoList-API
-API de Tarefas básico
+API de Tarefas básico com Minimal Api e SQLite
+![Print da documentação gerada pelo Swagger](/docs/Swagger-UI.png)
